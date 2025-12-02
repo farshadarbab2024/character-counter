@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+:root{
+    --main-color: #5682e8
+}
+@theme{
+    --color-main-color: var(--main-color) ; 
+}

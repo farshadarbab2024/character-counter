@@ -1,4 +1,4 @@
-import { Button, message, Progress, Slider } from "antd";
+import { Button, message, Progress } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useState } from "react";
 import { GrClearOption } from "react-icons/gr";
@@ -15,7 +15,7 @@ interface Result {
 interface RepeatChar {
   char: string;
   count: number;
-  percent:number ;
+  percent: number;
 }
 function App() {
   const [characters, setCharacters] = useState<number>(0);
@@ -24,7 +24,6 @@ function App() {
   const [pages, setPages] = useState<number>(0);
   const characterPerPage = 1000;
   const [text, setText] = useState<string>("");
-  const charactersInWord = 5;
   const [messageApi, contextHolder] = message.useMessage();
   const [mostRepeatChars, setMostRepeatChars] = useState<RepeatChar[]>([]);
   const results: Result[] = [
@@ -133,14 +132,12 @@ function App() {
         }
       }
 
-      console.log("percent: ", mostRepeatCount / text?.length)
-
       setMostRepeatChars((prev) => {
         const newMostRepeatChars = structuredClone(prev);
         newMostRepeatChars[i] = {
-          char: mostRepeatChar,
+          char: mostRepeatChar ? mostRepeatChar : "",
           count: mostRepeatCount,
-          percent: Math.floor(mostRepeatCount / text?.length * 100), 
+          percent: Math.floor((mostRepeatCount / text?.length) * 100),
         };
         return newMostRepeatChars;
       });
@@ -149,10 +146,6 @@ function App() {
     }
   }, [text]);
 
-  // ntdelete bco
-  useEffect(() => {
-    console.log("mostRepeatChars: ", mostRepeatChars);
-  }, mostRepeatChars);
   return (
     <div className="w-full flex justify-between py-6 px-8">
       {contextHolder}
@@ -208,7 +201,7 @@ function App() {
                 .then(() => {
                   messageApi.success("The text copied!");
                 })
-                .catch((err) => {
+                .catch(() => {
                   messageApi.error("Failed");
                 });
             }}
@@ -222,15 +215,14 @@ function App() {
         <div className="mt-10">
           {mostRepeatChars?.map((mostRepeatChar: RepeatChar, index: number) => {
             return (
-              <div key={"mostRepeatChar" + index}
-              style={{
-                display: mostRepeatChar?.char ? "block" : "none", 
-              }}
+              <div
+                key={"mostRepeatChar" + index}
+                style={{
+                  display: mostRepeatChar?.char ? "block" : "none",
+                }}
               >
                 <span>{mostRepeatChar?.char}</span>
-                <Progress percent={mostRepeatChar?.percent}
-                status="normal"
-                                />
+                <Progress percent={mostRepeatChar?.percent} status="normal" />
               </div>
             );
           })}
